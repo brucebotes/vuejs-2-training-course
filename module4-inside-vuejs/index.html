@@ -1,0 +1,77 @@
+<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+<meta charset="utf8" />
+<script src="vue.js"></script>
+
+<div id="app1">
+  <h1 ref="heading">{{ title }}</h1>
+  <button v-on:click="show" ref="myButton">Show Paragraph</button>
+  <p v-if="showParagraph">This is not always visible</p>
+</div>
+
+<div id="app2">
+  <h1 ref="heading">{{ title }}</h1>
+  <button @click="onChange">Change heading in "app1"</button>
+</div>
+
+<div id="app3"></div>
+
+<script>
+  var data = { title: 'The VueJS Instance', showParagraph: false }
+
+  var vm1 = new Vue({
+    //el: '#app1',
+    data: data,
+    methods: {
+      show: function () {
+        this.showParagraph = true
+        this.updateTitle('The VueJS Instance (Updated)')
+        this.$refs.myButton.innerText = 'Test'
+      },
+      updateTitle: function (title) {
+        this.title = title
+      }
+    },
+    computed: {
+      lowercaseTitle: function () {
+        return this.title.toLowerCase()
+      }
+    },
+    watch: {
+      title: function (value) {
+        alert('Title changed, new value: ' + value)
+      }
+    }
+  })
+  vm1.$mount('#app1')
+
+  console.log('Is it the same data structure:', vm1.$data === data)
+  //vm1.$refs.heading.innerText = 'Externally adjusted - VueJS update broken'
+
+  setTimeout(function () {
+    vm1.title = 'Changed by Timer!'
+    vm1.show()
+  }, 3000)
+
+  var vm2 = new Vue({
+    el: '#app2',
+    data: {
+      title: 'Second instance'
+    },
+    methods: {
+      onChange: function () {
+        vm1.title = 'Changed by "app2"'
+      }
+    }
+  })
+
+  // Another way to create a template
+  var vm3 = new Vue({
+    template: '<h1>Hello from template</h1>'
+  })
+  // Method 1 to attach the vm3 model to div
+  //vm3.$mount('#app3')
+  // Method 2 to attach the vm3 model to div
+  // - Here we are using vanilla Javascript
+  vm3.$mount() // render the template as an off-document element
+  document.getElementById('app3').appendChild(vm3.$el)
+</script>

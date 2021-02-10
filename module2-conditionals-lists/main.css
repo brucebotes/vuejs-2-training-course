@@ -1,0 +1,10 @@
+div {
+  padding: 1rem;
+  border: 1px solid black;
+}
+
+.title {
+  text-decoration: underline;
+  font-weight: bold;
+  color: darkmagenta;
+}

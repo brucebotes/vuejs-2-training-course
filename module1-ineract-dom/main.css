@@ -1,0 +1,35 @@
+div {
+  padding: 1rem;
+  border: 1px solid black;
+}
+
+.name {
+  background: lightgreen;
+}
+.coordinates {
+  padding: 0.5rem;
+  background: #ccc;
+}
+
+.coordinates span {
+  background: lightblue;
+}
+
+.demo {
+  padding: 0;
+  width: 100px;
+  height: 100px;
+  background-color: gray;
+  display: inline-block;
+  margin: 10px;
+}
+
+.red {
+  background-color: red;
+}
+.green {
+  background-color: green;
+}
+.blue {
+  background-color: blue;
+}

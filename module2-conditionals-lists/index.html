@@ -1,0 +1,60 @@
+<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+<script src="vue.js"></script>
+<link rel="stylesheet" href="main.css" />
+
+<div id="exercise">
+  <div>
+    <p class="title">Hide and show</p>
+    <p v-if="show">You can see me! <span>I am removed too</span></p>
+    <p v-else>Now you see me!!</p>
+    <template v-if="show">
+      <h3>Heading</h3>
+      <p>Inside a template</p>
+    </template>
+    <p v-show="show">Do you also see me? I was hidden with 'display: none'</p>
+    <button @click="show = !show">Show</button>
+  </div>
+  <div>
+    <p class="title">Lists in a loop</p>
+
+    <ul>
+      <li v-for="(ingredient, i) in ingredients" :key="ingredient">
+        ({{ i }}): {{ ingredient }}
+      </li>
+    </ul>
+    <button @click="ingredients.push('spices')">Add spice</button>
+    <p>Note that a key can(should) be added to the item to assist 
+      in replacing/updating vuejs proxied arrays. As in this example</p>
+
+    <hr />
+    <ul>
+      <li v-for="person in persons">
+        <span v-for="(value, key, index) in person">{{ key }}: {{ value }} ({{index}}), <span>
+
+      </li>
+    </ul>
+    <hr />
+
+    <template v-for="(ingredient, index) in ingredients">
+      <h3>{{ ingredient }}</h3>
+      <p>Position: {{ index }}</p>
+    </template>
+
+    <hr>
+    <span v-for="n in 10">{{n}},</span>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#exercise',
+    data: {
+      show: true,
+      ingredients: ['meat', 'fruit', 'cookies'],
+      persons: [
+        { name: 'Bruce', age: 60, color: 'red' },
+        { name: 'Hersey', age: 0.5, color: 'black' }
+      ]
+    }
+  })
+</script>

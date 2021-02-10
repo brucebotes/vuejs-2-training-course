@@ -1,0 +1,192 @@
+<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+<script src="vue.js"></script>
+<link rel="stylesheet" href="main.css" />
+
+<div id="exercise">
+  <div>
+    <p>
+      Using v-html directive: <span v-html="rawHtml" style="color: red;"></span>
+    </p>
+  </div>
+  <div>
+    <!-- 1) Fill the <p> below with your Name and Age - using Interpolation -->
+    <p>
+      VueJS is pretty cool - <span class="name">{{ name }}</span> {{ age }}
+    </p>
+    <!-- 2) Output your age, multiplied by 3 -->
+    <p>{{ age * 3 }}</p>
+    <!-- 3) Call a function to output a random float between 0 and 1 (Math.random()) -->
+    <!-- run once only -->
+    <p v-once>{{ randomFunc() }}</p>
+  </div>
+  <!-- 4) Search any image on Google and output it here by binding the "src" attribute -->
+  <div>
+    <img style="width: 200px;" v-bind:src="link" alt="blackhole" />
+  </div>
+  <!-- 5) Pre-Populate this input with your name (set the "value" attribute) -->
+  <div>
+    <input
+      class="name"
+      type="text"
+      v-bind:value="name"
+      v-on:change="onInputChange"
+    />
+  </div>
+  <div class="coordinates">
+    <p v-on:mousemove="updateCoordinates">
+      Coordinates: {{ x }} / {{ y }} -
+      <span v-on:mousemove.stop="">Stop recording coordinates here</span>
+    </p>
+  </div>
+  <div>
+    <button v-on:click="incrementCount(2, $event)">Add 2</button>
+    <p>Counter:{{ count }}</p>
+  </div>
+  <div>
+    <p>Note: lagged output(one character behind pressed)! =&gt {{ value }}</p>
+    <input
+      type="text"
+      v-on:keydown="value = $event.target.value"
+      placeholder="Enter lagged output"
+    />
+    <p>Note: synced response! =&gt {{ message }}</p>
+    <input type="text" v-on:keyup="onInput" placeholder="Type something" />
+    <input
+      type="text"
+      v-on:keyup.up="alertMe"
+      placeholder="Press up arrow for update"
+    />
+  </div>
+  <div>
+    <p>
+      Demo two way data binding - <span class="name">Name</span> in line one
+      gets updated!
+    </p>
+    <input class="name" type="text" v-model="name" />
+  </div>
+  <div>
+    <p>Counter: {{ counter }} | {{ secondCounter }}</p>
+    <p>Result: Counter1: {{ result() }} | Counter2: {{ output }}</p>
+    <button v-on:click="counter++">Increase</button>
+    <button v-on:click="counter--">Decreacse</button>
+    <button v-on:click="secondCounter++">Increase Second Counter</button>
+  </div>
+  <div>
+    <p>Computed variable and watched variable exercise</p>
+    <button v-on:click="oValue += 5">Add 5</button>
+    <button v-on:click="oValue++">Add 1</button>
+    <p>{{ objective }}</p>
+  </div>
+  <div>
+    <p>Adding classes to the div</p>
+    <div class="demo" @click="attachRed = !attachRed" :class="divClasses"></div>
+    <div class="demo" :class="{'red': attachRed}"></div>
+    <div class="demo" :class="[color, {red: attachRed}]"></div>
+    <hr />
+    <input type="text" v-model="color" />
+  </div>
+  <div>
+    <p>Working with styles</p>
+    <div class="demo" :style="{'background-color': styleColor}"></div>
+    <div class="demo" :style="myStyle"></div>
+    <div class="demo" :style="[myStyle, {height: width+'px'}]"></div>
+    <hr />
+    <input type="text" v-model="styleColor" />
+    <input type="text" v-model="width" />
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#exercise',
+    data: {
+      rawHtml: '<h3>Raw header &lth3&gt html tag</h3>',
+      name: 'Bruce',
+      age: 60,
+      link: 'https://cdn.eso.org/images/thumb700x/eso1907a.jpg',
+      count: 0,
+      x: 0,
+      y: 0,
+      value: '',
+      message: '',
+      counter: 0,
+      secondCounter: 0,
+      oValue: 0,
+      attachRed: false,
+      color: 'green',
+      styleColor: 'lightblue',
+      width: '100'
+    },
+    // computed output works like data, but is only invoked when
+    // required to process - Vuejs caches the calculation for processing
+    // and uses it only when the screen needs upadating
+    computed: {
+      output: function () {
+        console.log('Computed - Output invoked')
+        return this.counter > 5 ? 'Greater than 5' : 'Smaller than 5'
+      },
+      objective: function () {
+        return this.oValue >= 15 ? 'Done' : 'more...'
+      },
+      divClasses: function () {
+        return {
+          red: this.attachRed,
+          blue: !this.attachRed
+        }
+      },
+      myStyle: function () {
+        return {
+          backgroundColor: this.styleColor,
+          width: this.width + 'px'
+        }
+      }
+    },
+    // Use watch for async code
+    watch: {
+      // if counter changes, reset it after 2 seconds.
+      counter: function () {
+        var vm = this
+        setTimeout(function () {
+          vm.counter = 0
+        }, 2000)
+      },
+      // if objective changes to done, wait 5 seconds and reset!
+      objective: function () {
+        var vm = this
+        setTimeout(function () {
+          vm.oValue = 0
+        }, 5000)
+      }
+    },
+    // Methods are called for each screen (component) refresh
+    // look at the console log and note that the result() method
+    // gets called each time
+    methods: {
+      randomFunc: function () {
+        return Math.random()
+      },
+      incrementCount: function (step, event) {
+        this.count += step
+        console.log(event)
+      },
+      onInputChange(e) {
+        console.log(e.target.value)
+      },
+      updateCoordinates(e) {
+        this.x = e.clientX
+        this.y = e.clientY
+      },
+      onInput: function (e) {
+        this.message = e.target.value
+      },
+      alertMe: function (e) {
+        //alert('Up arrow pressed')
+        this.message = e.target.value
+      },
+      result: function () {
+        console.log('Method - result invoked')
+        return this.counter > 5 ? 'Greater than 5' : 'Smaller than 5'
+      }
+    }
+  })
+</script>
